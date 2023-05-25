@@ -36,29 +36,31 @@ func New(size int) *Filter {
 }
 
 // Test if the string may be in the filter
-func (f *Filter) TestString(s string) bool {
-	h := zxxh3.Hash(s2b(s))
-	return f.dat[(h>>3)%f.size]&(1<<(h&0x7)) > 0
+func (f *Filter) TestString(s string) (hash uint64, ok bool) {
+	hash = zxxh3.Hash(s2b(s))
+	return hash, f.dat[(hash>>3)%f.size]&(1<<(hash&0x7)) > 0
 }
 
 // Test if a string may be in the filter
-func (f *Filter) Test(d []byte) bool {
-	h := zxxh3.Hash(d)
+func (f *Filter) Test(d []byte) (hash uint64, ok bool) {
+	hash = zxxh3.Hash(d)
 	//fmt.Println("hash", h%f.size)
-	return f.dat[(h>>3)%f.size]&(1<<(h&0x7)) > 0
+	return hash, f.dat[(hash>>3)%f.size]&(1<<(hash&0x7)) > 0
 }
 
 // Add a string to the filter
-func (f *Filter) AddString(s string) {
-	h := zxxh3.Hash(s2b(s))
-	f.dat[(h>>3)%f.size] |= 1 << (h & 0x7)
+func (f *Filter) AddString(s string) (hash uint64) {
+	hash = zxxh3.Hash(s2b(s))
+	f.dat[(hash>>3)%f.size] |= 1 << (hash & 0x7)
+	return
 }
 
 // Add a byte slice to the filter
-func (f *Filter) Add(d []byte) {
-	h := zxxh3.Hash(d)
+func (f *Filter) Add(d []byte) (hash uint64) {
+	hash = zxxh3.Hash(d)
 	//fmt.Println("hash", h%f.size)
-	f.dat[(h>>3)%f.size] |= 1 << (h & 0x7)
+	f.dat[(hash>>3)%f.size] |= 1 << (hash & 0x7)
+	return
 }
 
 func s2b(value string) (b []byte) {
