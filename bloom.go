@@ -18,7 +18,7 @@ package bloom
 
 import (
 	"encoding/gob"
-	"os"
+	"io"
 	"reflect"
 	"unsafe"
 
@@ -77,14 +77,14 @@ type save struct {
 	Dat  []byte
 }
 
-// Save the filter into a file
-func (w *Filter) Save(fh *os.File) {
+// Save the filter into a writer
+func (w *Filter) Save(fh io.Writer) {
 	enc := gob.NewEncoder(fh)
 	enc.Encode(save{Size: w.size, Dat: w.dat})
 }
 
-// Load a filter from a file
-func Load(fh *os.File) (*Filter, error) {
+// Load a filter from a reader
+func Load(fh io.Reader) (*Filter, error) {
 	dec := gob.NewDecoder(fh)
 	ret := new(save)
 	err := dec.Decode(ret)
