@@ -11,7 +11,7 @@ func ExampleNew() {
 	fmt.Println("before", filter.dat)
 	filter.AddString("hello")
 	fmt.Println("after", filter.dat)
-	_, hit := filter.TestString("hello")
+	hit := filter.TestString("hello")
 	fmt.Println("test", hit)
 	// Output:
 	// before [0 0 0 0 0 0 0 0 0 0 0 0]
@@ -24,7 +24,7 @@ func ExampleAddString() {
 	fmt.Println("before", filter.dat)
 	filter.AddString("hello")
 	fmt.Println("after", filter.dat)
-	_, hit := filter.TestString("hello")
+	hit := filter.TestString("hello")
 	fmt.Println("test", hit)
 	// Output:
 	// before [0 0 0 0 0 0 0 0 0 0 0 0]
@@ -37,7 +37,7 @@ func ExampleAdd() {
 	fmt.Println("before", filter.dat)
 	filter.Add([]byte("hello"))
 	fmt.Println("after", filter.dat)
-	_, hit := filter.TestString("hello")
+	hit := filter.TestString("hello")
 	fmt.Println("test", hit)
 	// Output:
 	// before [0 0 0 0 0 0 0 0 0 0 0 0]
@@ -57,7 +57,7 @@ func ExampleSaveAndLoad() {
 	filt, _ := Load(my)
 	my.Close()
 	fmt.Println("after", filt.dat)
-	_, hit := filter.TestString("hello")
+	hit := filter.TestString("hello")
 	fmt.Println("test", hit)
 	// Output:
 	// before [0 0 0 32 0 0 0 0 0 0 0 0]

@@ -35,17 +35,28 @@ func New(size int) *Filter {
 	return &Filter{size: uint64(size >> 3), dat: make([]byte, size>>3)}
 }
 
-// Test if the string may be in the filter
-func (f *Filter) TestString(s string) (hash uint64, ok bool) {
+// Test if the string may be in the filter, and return hash used
+func (f *Filter) TestStringHash(s string) (hash uint64, ok bool) {
 	hash = zxxh3.Hash(s2b(s))
 	return hash, f.dat[(hash>>3)%f.size]&(1<<(hash&0x7)) > 0
 }
 
-// Test if a string may be in the filter
-func (f *Filter) Test(d []byte) (hash uint64, ok bool) {
+// Test if a string may be in the filter, and return hash used
+func (f *Filter) TestHash(d []byte) (hash uint64, ok bool) {
 	hash = zxxh3.Hash(d)
-	//fmt.Println("hash", h%f.size)
 	return hash, f.dat[(hash>>3)%f.size]&(1<<(hash&0x7)) > 0
+}
+
+// Test if the string may be in the filter
+func (f *Filter) TestString(s string) bool {
+	hash := zxxh3.Hash(s2b(s))
+	return f.dat[(hash>>3)%f.size]&(1<<(hash&0x7)) > 0
+}
+
+// Test if a string may be in the filter
+func (f *Filter) Test(d []byte) bool {
+	hash := zxxh3.Hash(d)
+	return f.dat[(hash>>3)%f.size]&(1<<(hash&0x7)) > 0
 }
 
 // Add a string to the filter
