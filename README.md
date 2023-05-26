@@ -5,13 +5,9 @@ A very simple fast bloom filter with Add, Test, Save, and Load methods.
 ## Create and test
 ```golang
   filter := New(100)
-  fmt.Println("before", filter.dat)
   filter.AddString("hello")
-  fmt.Println("after", filter.dat)
   fmt.Println("test", filter.TestString("hello"))
   // Output:
-  // before [0 0 0 0 0 0 0 0 0 0 0 0]
-  // after [0 0 0 32 0 0 0 0 0 0 0 0]
   // test true
 ```
 
@@ -19,7 +15,6 @@ A very simple fast bloom filter with Add, Test, Save, and Load methods.
 ```golang
   filter := New(100)
   filter.Add([]byte("hello"))
-  fmt.Println("before", filter.dat)
   fh, _ := os.Create("bloom.flt")
   filter.Save(fh)
   fh.Close()
@@ -27,11 +22,8 @@ A very simple fast bloom filter with Add, Test, Save, and Load methods.
   my, _ := os.Open("bloom.flt")
   filt, _ := Load(my)
   my.Close()
-  fmt.Println("after", filt.dat)
   fmt.Println("test", filt.TestString("hello"))
   // Output:
-  // before [0 0 0 32 0 0 0 0 0 0 0 0]
-  // after [0 0 0 32 0 0 0 0 0 0 0 0]
   // test true
 ```
 
