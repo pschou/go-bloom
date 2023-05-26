@@ -89,9 +89,9 @@ type save struct {
 }
 
 // Save the filter into a writer
-func (w *Filter) Save(fh io.Writer) {
+func (w *Filter) Save(fh io.Writer) error {
 	enc := gob.NewEncoder(fh)
-	enc.Encode(save{Size: w.size, Dat: w.dat})
+	return enc.Encode(save{Size: w.size, Dat: w.dat})
 }
 
 // Load a filter from a reader
