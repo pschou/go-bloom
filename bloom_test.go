@@ -45,6 +45,11 @@ func ExampleSaveAndLoad() {
 	my, _ := os.Open("bloom.flt")
 	filt, _ := bloom.Load(my)
 	my.Close()
+
+	// Fold the filter in half
+	filt.Fold(2)
+
+	// Verify that hello still matches
 	hit := filt.TestString("hello")
 	fmt.Println("test", hit)
 	// Output:
