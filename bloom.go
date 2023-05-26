@@ -17,6 +17,7 @@
 package bloom
 
 import (
+	"bufio"
 	"bytes"
 	"errors"
 	"io"
@@ -165,4 +166,26 @@ func Load(fh io.Reader) (*Filter, error) {
 		return &Filter{dat: buf.Bytes(), size: uint64(n)}, nil
 	}
 	return nil, nil
+}
+
+// Load a filter from a reader
+func LoadFolded(fh io.Reader, size, n int) (*Filter, error) {
+	buf := bufio.NewReader(fh)
+	if n < 1 {
+		return nil, errors.New("Folding n has to be a positive value")
+	} else if size%n > 0 {
+		return nil, errors.New("Folding n has to be a multiple of current filter size")
+	}
+	sz := size / n
+	dat := make([]byte, sz)
+	var err error
+	var b byte
+	for i := 0; i < size; i++ {
+		b, err = buf.ReadByte()
+		if err != nil {
+			return nil, err
+		}
+		dat[i%sz] |= b
+	}
+	return &Filter{dat: dat, size: uint64(sz)}, nil
 }
