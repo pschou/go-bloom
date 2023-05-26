@@ -20,7 +20,7 @@ A very simple fast bloom filter with Add, Test, Save, and Load methods.
   fh.Close()
 
   my, _ := os.Open("bloom.flt")
-  filt, _ := Load(my)
+  filt, _ := Load(my, 1)
   my.Close()
   fmt.Println("test", filt.TestString("hello"))
   // Output:

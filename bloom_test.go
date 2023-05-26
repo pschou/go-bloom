@@ -42,9 +42,10 @@ func ExampleSaveAndLoad() {
 	filter.Save(fh)
 	fh.Close()
 
-	my, _ := os.Open("bloom.flt")
-	filt, _ := bloom.Load(my)
-	my.Close()
+	filt, err := bloom.LoadFile("bloom.flt", 1)
+	if err != nil {
+		panic(err)
+	}
 
 	// Fold the filter in half
 	filt.Fold(2)
