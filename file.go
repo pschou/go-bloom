@@ -5,6 +5,8 @@ import (
 	"encoding/binary"
 	"io"
 	"os"
+
+	gzip "github.com/klauspost/pgzip"
 )
 
 type save struct {
@@ -16,7 +18,13 @@ type save struct {
 func (w *Filter) Save(fh io.Writer) (err error) {
 	hdr := []byte("BLOOMFLT        ")
 	binary.BigEndian.PutUint64(hdr[8:], w.size)
-	_, err = io.Copy(fh, io.MultiReader(bytes.NewReader(hdr), bytes.NewReader(w.dat)))
+	_, err = fh.Write(hdr)
+	if err != nil {
+		return
+	}
+	gzw := gzip.NewWriter(fh)
+	_, err = io.Copy(gzw, bytes.NewReader(w.dat))
+	gzw.Close()
 	return
 }
 

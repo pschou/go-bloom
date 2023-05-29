@@ -5,15 +5,16 @@ import (
 	"encoding/binary"
 	"fmt"
 	"io"
+
+	gzip "github.com/klauspost/pgzip"
 )
 
 // Load a filter from a reader.  Use n = 1 to read the whole file into memory,
 // and use n > 1 to read the filter in to memory but only use 1/n the space in
 // memory (with a higher likelyhood of false positive hits).
 func Load(fh io.Reader, n int) (*Filter, error) {
-	buf := bufio.NewReader(fh)
 	hdr := make([]byte, 16)
-	c, err := buf.Read(hdr)
+	c, err := fh.Read(hdr)
 	if err != nil {
 		return nil, err
 	}
@@ -33,6 +34,12 @@ func Load(fh io.Reader, n int) (*Filter, error) {
 
 	sz := size / n
 	dat := make([]byte, sz)
+
+	gzr, err := gzip.NewReader(fh)
+	if err != nil {
+		return nil, err
+	}
+	buf := bufio.NewReader(gzr)
 	var b byte
 	for i := 0; i < size; i++ {
 		b, err = buf.ReadByte()
