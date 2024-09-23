@@ -29,9 +29,9 @@ type Filter struct {
 	dat  []byte
 }
 
-// Size will create a new bloom filter in memory, note that if the size is not a multiple of 8 it will be rounded down to the multiple of 8.
+// Size will create a new bloom filter in memory, note that the size is the bytes reserved in memory for the filter
 func New(size int) *Filter {
-	return &Filter{size: uint64(size >> 3), dat: make([]byte, size>>3)}
+	return &Filter{size: uint64(size), dat: make([]byte, size)}
 }
 
 // Test if the string may be in the filter, and return hash used
@@ -40,7 +40,7 @@ func (f *Filter) TestStringHash(s string) (hash uint64, ok bool) {
 	return hash, f.dat[(hash>>3)%f.size]&(1<<(hash&0x7)) > 0
 }
 
-// Test if a string may be in the filter, and return hash used
+// Test if a bytes slice may be in the filter, and return hash used
 func (f *Filter) TestHash(d []byte) (hash uint64, ok bool) {
 	hash = zxxh3.Hash(d)
 	return hash, f.dat[(hash>>3)%f.size]&(1<<(hash&0x7)) > 0
@@ -52,7 +52,7 @@ func (f *Filter) TestString(s string) bool {
 	return f.dat[(hash>>3)%f.size]&(1<<(hash&0x7)) > 0
 }
 
-// Test if a string may be in the filter
+// Test if a byte slice may be in the filter
 func (f *Filter) Test(d []byte) bool {
 	hash := zxxh3.Hash(d)
 	return f.dat[(hash>>3)%f.size]&(1<<(hash&0x7)) > 0
@@ -68,7 +68,6 @@ func (f *Filter) AddString(s string) (hash uint64) {
 // Add a byte slice to the filter
 func (f *Filter) Add(d []byte) (hash uint64) {
 	hash = zxxh3.Hash(d)
-	//fmt.Println("hash", h%f.size)
 	f.dat[(hash>>3)%f.size] |= 1 << (hash & 0x7)
 	return
 }
