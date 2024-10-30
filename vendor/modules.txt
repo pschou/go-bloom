@@ -1,12 +1,6 @@
-# github.com/klauspost/compress v1.16.5
-## explicit; go 1.18
-github.com/klauspost/compress/flate
 # github.com/klauspost/cpuid/v2 v2.0.9
 ## explicit; go 1.13
 github.com/klauspost/cpuid/v2
-# github.com/klauspost/pgzip v1.2.6
-## explicit
-github.com/klauspost/pgzip
 # github.com/zeebo/xxh3 v1.0.2
 ## explicit; go 1.17
 github.com/zeebo/xxh3

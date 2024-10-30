@@ -4,28 +4,12 @@ A very simple fast bloom filter with Add, Test, Save, and Load methods.
 
 ## Create and test
 ```golang
-  filter := New(100)
-  filter.AddString("hello")
-  fmt.Println("test", filter.TestString("hello"))
-  // Output:
-  // test true
-```
-
-## Save and loading
-```golang
-  filter := New(100)
+  filter := bloom.Filter{make([]byte, 100)}
   filter.Add([]byte("hello"))
-  fh, _ := os.Create("bloom.flt")
-  filter.Save(fh)
-  fh.Close()
-
-  my, _ := os.Open("bloom.flt")
-  filt, _ := Load(my, 1)
-  my.Close()
-  fmt.Println("test", filt.TestString("hello"))
-  // Output:
-  // test true
+  hit := filter.TestString("hello")
 ```
+
+To save or load data, use the filter.Data slice.
 
 ## Benchmarks
 ```
